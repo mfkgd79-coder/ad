@@ -1,0 +1,283 @@
+/* ═══════════════════════════════════════
+   CINEMATIC GENERATION OVERLAY
+═══════════════════════════════════════ */
+
+.gen-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: #08080c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.gen-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ── Canvas Particles ── */
+.gen-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* ── Floating Tool Icons ── */
+.gen-floating-icons {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.float-icon {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(121, 107, 216, 0.06);
+  border: 1px solid rgba(121, 107, 216, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(121, 107, 216, 0.25);
+  font-size: 1rem;
+  animation: iconFloat 8s ease-in-out infinite;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.gen-overlay.active .float-icon {
+  opacity: 1;
+}
+
+.fi-1 { top: 12%; left: 8%;  animation-delay: 0s;   animation-duration: 7s; }
+.fi-2 { top: 20%; right: 12%; animation-delay: 1s;   animation-duration: 9s; }
+.fi-3 { top: 60%; left: 5%;  animation-delay: 0.5s;  animation-duration: 8s; }
+.fi-4 { top: 70%; right: 8%; animation-delay: 1.5s;  animation-duration: 10s; }
+.fi-5 { top: 40%; left: 15%; animation-delay: 2s;    animation-duration: 7.5s; }
+.fi-6 { top: 30%; right: 20%; animation-delay: 0.8s; animation-duration: 8.5s; }
+.fi-7 { top: 80%; left: 20%; animation-delay: 1.2s;  animation-duration: 9.5s; }
+.fi-8 { top: 15%; left: 40%; animation-delay: 2.5s;  animation-duration: 6.5s; }
+
+@keyframes iconFloat {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25%      { transform: translateY(-15px) rotate(5deg); }
+  50%      { transform: translateY(-8px) rotate(-3deg); }
+  75%      { transform: translateY(-20px) rotate(2deg); }
+}
+
+/* ── Main Box ── */
+.gen-box {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 3rem;
+  max-width: 480px;
+  width: 90%;
+}
+
+/* ── Glowing Orbs ── */
+.gen-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.gen-orb-1 {
+  width: 300px;
+  height: 300px;
+  background: rgba(121, 107, 216, 0.15);
+  top: -100px;
+  left: -100px;
+  animation: orbPulse 4s ease-in-out infinite;
+}
+
+.gen-orb-2 {
+  width: 250px;
+  height: 250px;
+  background: rgba(79, 70, 229, 0.1);
+  bottom: -80px;
+  right: -80px;
+  animation: orbPulse 5s ease-in-out infinite reverse;
+}
+
+@keyframes orbPulse {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50%      { transform: scale(1.3); opacity: 1; }
+}
+
+/* ── Spinner ── */
+.gen-spinner {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 2rem;
+}
+
+.spin-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: rgba(121, 107, 216, 0.8);
+  animation: spinRing 1.5s linear infinite;
+}
+
+.spin-ring.r2 {
+  inset: 8px;
+  border-top-color: rgba(167, 139, 250, 0.5);
+  animation-duration: 2s;
+  animation-direction: reverse;
+}
+
+.spin-ring.r3 {
+  inset: 16px;
+  border-top-color: rgba(79, 70, 229, 0.3);
+  animation-duration: 2.5s;
+}
+
+@keyframes spinRing {
+  to { transform: rotate(360deg); }
+}
+
+.gen-logo {
+  position: absolute;
+  inset: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: #a78bfa;
+  animation: logoPulse 2s ease-in-out infinite;
+}
+
+@keyframes logoPulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50%      { transform: scale(1.1); opacity: 1; }
+}
+
+/* ── Status Text ── */
+.gen-status {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #e4e4e7;
+  margin-bottom: 0.4rem;
+  transition: all 0.3s ease;
+  min-height: 1.5em;
+}
+
+.gen-sub {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-bottom: 2rem;
+  transition: all 0.3s ease;
+  min-height: 1.2em;
+}
+
+/* ── Progress Bar ── */
+.gen-progress {
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto 1.5rem;
+}
+
+.gen-progress-track {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 100px;
+  overflow: hidden;
+  position: relative;
+}
+
+.gen-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #796BD8, #a78bfa, #4F46E5);
+  border-radius: 100px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.gen-progress-glow {
+  position: absolute;
+  top: -4px;
+  height: 14px;
+  width: 60px;
+  background: radial-gradient(circle, rgba(121, 107, 216, 0.6), transparent);
+  border-radius: 100px;
+  left: 0%;
+  transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: blur(4px);
+}
+
+.gen-progress-info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.6rem;
+  font-size: 0.75rem;
+}
+
+.gen-step {
+  color: #6b7280;
+}
+
+.gen-percent {
+  color: #a78bfa;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Live Log ── */
+.gen-log {
+  max-width: 360px;
+  margin: 0 auto;
+  text-align: left;
+  max-height: 120px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.gen-log::-webkit-scrollbar { display: none; }
+
+.gen-log-item {
+  font-size: 0.75rem;
+  color: #4b5563;
+  padding: 0.2rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  animation: logFade 0.3s ease;
+}
+
+.gen-log-item.done { color: #10b981; }
+.gen-log-item.active { color: #a78bfa; }
+
+.gen-log-item .log-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.gen-log-item.done .log-dot { background: #10b981; }
+.gen-log-item.active .log-dot { background: #a78bfa; animation: dotPulse 1s infinite; }
+.gen-log-item .log-dot { background: #374151; }
+
+@keyframes logFade {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes dotPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}

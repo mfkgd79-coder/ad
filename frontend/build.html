@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Build · Webify</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/build.css">
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════
+       GENERATION OVERLAY
+  ═══════════════════════════════════════ -->
+  <div id="genOverlay" class="gen-overlay">
+    <div class="gen-box">
+      <div class="gen-spinner">
+        <div class="spin-ring"></div>
+        <div class="spin-ring r2"></div>
+        <div class="gen-logo">W</div>
+      </div>
+      <div class="gen-text" id="genText">Analyzing your prompt…</div>
+      <div class="gen-bar"><div class="gen-bar-fill" id="genBarFill"></div></div>
+      <div class="gen-step" id="genStep">Step 1 / 5</div>
+    </div>
+  </div>
+
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-mark">W</div>
+      <span class="nav-logo-text">Webify<span class="nav-logo-star">✦</span></span>
+    </a>
+
+    <div class="nav-center">
+      <a href="index.html" class="nav-link"><i class="fas fa-house"></i> Home</a>
+      <a href="ui-library.html" class="nav-link"><i class="fas fa-layer-group"></i> UI Library</a>
+      <a href="build.html" class="nav-link active"><i class="fas fa-wand-magic-sparkles"></i> Assistant</a>
+    </div>
+
+    <div class="nav-right">
+      <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile drawer -->
+  <div class="nav-drawer" id="navDrawer">
+    <a href="index.html" class="nav-drawer-link"><i class="fas fa-house"></i> Home</a>
+    <a href="ui-library.html" class="nav-drawer-link"><i class="fas fa-layer-group"></i> UI Library</a>
+    <a href="build.html" class="nav-drawer-link active"><i class="fas fa-wand-magic-sparkles"></i> Assistant</a>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       PROMPT STAGE
+  ═══════════════════════════════════════ -->
+  <div id="promptStage" class="prompt-stage">
+    <div class="prompt-hero">
+      <div class="ph-icon">
+        <i class="fas fa-wand-magic-sparkles"></i>
+      </div>
+      <h1>What would you like to build?</h1>
+      <p>Describe your website and AI will generate it for you instantly.</p>
+
+      <div id="backendStatus" class="backend-status checking"><i class="fas fa-circle"></i> Checking backend…</div>
+      <div class="ph-input-wrap">
+        <div class="ph-input-box" id="phInputBox">
+          <textarea id="buildPrompt"
+            placeholder="e.g. a portfolio for a photographer with a gallery, about, and contact section…"
+            rows="1"
+            autocomplete="off"></textarea>
+          <button id="generateBtn" class="ph-go-btn" title="Generate">
+            <i class="fas fa-arrow-up"></i>
+          </button>
+        </div>
+        <div class="ph-suggestions">
+          <span>Try:</span>
+          <button class="sug-btn">landing page for a SaaS app</button>
+          <button class="sug-btn">restaurant website</button>
+          <button class="sug-btn">portfolio for a developer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       BUILDER STAGE
+  ═══════════════════════════════════════ -->
+<div id="builderStage" class="builder-stage" style="display:none">
+
+  <!-- Top bar -->
+  <div class="builder-topbar">
+    <div class="topbar-left">
+      <button id="newBtn" class="tb-btn ghost" title="New project">
+        <i class="fas fa-plus"></i> New
+      </button>
+
+      <div class="tb-divider"></div>
+
+      <!-- Device switches -->
+      <div class="device-btns">
+        <button class="dev-btn active" data-device="desktop" title="Desktop">
+          <i class="fas fa-desktop"></i>
+        </button>
+        <button class="dev-btn" data-device="tablet" title="Tablet">
+          <i class="fas fa-tablet-alt"></i>
+        </button>
+        <button class="dev-btn" data-device="mobile" title="Mobile">
+          <i class="fas fa-mobile-alt"></i>
+        </button>
+      </div>
+
+      <div class="tb-divider"></div>
+
+      <span id="veHintEl" class="edit-hint">
+        <i class="fas fa-mouse-pointer"></i>
+        Double-click any element to edit
+      </span>
+
+      <span id="frameworkBadge" class="fw-badge" style="display:none">
+        HTML
+      </span>
+    </div>
+
+    <div class="topbar-right">
+      <!-- ❌ REMOVED UNDO / REDO FROM HERE -->
+
+      <button id="codeBtn" class="tb-btn ghost" title="View/Edit Code">
+        <i class="fas fa-code"></i> Code
+      </button>
+
+      <button id="openTabBtn" class="tb-btn ghost" title="Open in new tab">
+        <i class="fas fa-external-link-alt"></i>
+      </button>
+
+      <button id="downloadBtn" class="tb-btn primary" title="Download">
+        <i class="fas fa-download"></i> Download
+      </button>
+    </div>
+  </div>
+
+  <!-- Multi-page tabs -->
+  <div class="page-tabs-bar" id="pageTabsBar" style="display:none"></div>
+
+  <!-- MAIN BUILDER AREA -->
+  <div class="builder-container">
+
+    <!-- PREVIEW -->
+    <div class="preview-shell" id="previewShell">
+      <iframe id="previewFrame"
+        sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-modals"
+        class="preview-iframe">
+      </iframe>
+    </div>
+
+    <!-- RIGHT SIDE EDIT PANEL -->
+    <div id="editorPanel" class="editor-panel">
+
+      <div class="editor-header">
+        <h3>Edit Element</h3>
+        <button id="cancelBtn" class="close-btn">&times;</button>
+      </div>
+
+      <!-- TEXT EDIT -->
+      <label>Text</label>
+      <textarea id="editorText" placeholder="Edit text..."></textarea>
+
+      <!-- UNDO REDO (ONLY HERE) -->
+      <div class="editor-actions">
+        <button id="undoBtn">Undo</button>
+        <button id="redoBtn">Redo</button>
+      </div>
+
+      <!-- ACTION BUTTONS -->
+      <div class="editor-actions">
+        <button id="applyBtn">Apply</button>
+        <button id="saveBtn" class="primary">Save Changes</button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+  <!-- ═══════════════════════════════════════
+       CODE PANEL (slide-up from bottom)
+  ═══════════════════════════════════════ -->
+  <div id="codePanel" class="code-panel-overlay">
+    <div class="cp-header">
+      <div class="cp-tabs">
+        <button class="cp-tab active" data-lang="html">HTML</button>
+        <button class="cp-tab" data-lang="css">CSS</button>
+        <button class="cp-tab" data-lang="js">JavaScript</button>
+      </div>
+      <div class="cp-actions">
+        <button id="cpApply"><i class="fas fa-check"></i> Apply Changes</button>
+        <button id="cpCopy"><i class="fas fa-copy"></i> Copy</button>
+        <button id="cpClose"><i class="fas fa-times"></i></button>
+      </div>
+    </div>
+    <textarea id="htmlEditor" class="cp-editor" spellcheck="false"></textarea>
+    <textarea id="cssEditor"  class="cp-editor" spellcheck="false" style="display:none"></textarea>
+    <textarea id="jsEditor"   class="cp-editor" spellcheck="false" style="display:none"></textarea>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       VISUAL EDITOR PANEL (right side drawer)
+  ═══════════════════════════════════════ -->
+  <div id="vePanel" class="ve-panel">
+    <div class="ve-header">
+      <div class="ve-title">
+        <i class="fas fa-pen-to-square"></i>
+        Edit Element
+        <code id="veTagLabel" class="ve-tag"></code>
+      </div>
+      <button class="ve-close" id="veClose"><i class="fas fa-times"></i></button>
+    </div>
+
+    <div class="ve-nav">
+      <button class="ve-nav-btn active" data-tab="content">Content</button>
+      <button class="ve-nav-btn" data-tab="style">Style</button>
+      <button class="ve-nav-btn" data-tab="layout">Layout</button>
+      <button class="ve-nav-btn" data-tab="code">Code</button>
+    </div>
+
+    <div class="ve-body">
+
+      <!-- CONTENT -->
+      <div class="ve-tab-pane active" id="vt-content">
+
+        <div class="ve-group" id="vg-text">
+          <label>Text Content</label>
+          <textarea id="ve-text" rows="3" placeholder="Element text…"></textarea>
+        </div>
+
+        <div class="ve-group" id="vg-href" style="display:none">
+          <label>Link URL</label>
+          <input id="ve-href" type="text" placeholder="https://…">
+        </div>
+
+        <div class="ve-group" id="vg-img" style="display:none">
+          <label>Image URL</label>
+          <input id="ve-img-src" type="text" placeholder="https://… or data:…">
+          <label style="margin-top:.5rem">Upload Image</label>
+          <input id="ve-img-upload" type="file" accept="image/*" class="file-inp">
+          <label style="margin-top:.5rem">Alt Text</label>
+          <input id="ve-img-alt" type="text" placeholder="Description">
+        </div>
+
+        <div class="ve-group" id="vg-btn" style="display:none">
+          <label>Button Text</label>
+          <input id="ve-btn-text" type="text" placeholder="Click me">
+          <label style="margin-top:.5rem">Button Link</label>
+          <input id="ve-btn-href" type="text" placeholder="https://…">
+        </div>
+
+      </div>
+
+      <!-- STYLE -->
+      <div class="ve-tab-pane" id="vt-style">
+
+        <div class="ve-row">
+          <div class="ve-group">
+            <label>Text Color</label>
+            <div class="color-row">
+              <input type="color" id="ve-color" value="#000000">
+              <input type="text"  id="ve-color-hex" class="hex-in" placeholder="#000000">
+            </div>
+          </div>
+          <div class="ve-group">
+            <label>Background</label>
+            <div class="color-row">
+              <input type="color" id="ve-bg" value="#ffffff">
+              <input type="text"  id="ve-bg-hex" class="hex-in" placeholder="#ffffff">
+            </div>
+          </div>
+        </div>
+
+        <div class="ve-row">
+          <div class="ve-group">
+            <label>Font Family</label>
+            <select id="ve-font-family">
+              <option value="">— inherit —</option>
+              <option value="system-ui,sans-serif">System UI</option>
+              <option value="'Inter',sans-serif">Inter</option>
+              <option value="'Roboto',sans-serif">Roboto</option>
+              <option value="'Poppins',sans-serif">Poppins</option>
+              <option value="'Montserrat',sans-serif">Montserrat</option>
+              <option value="'Playfair Display',serif">Playfair Display</option>
+              <option value="Georgia,serif">Georgia</option>
+              <option value="monospace">Monospace</option>
+            </select>
+          </div>
+          <div class="ve-group">
+            <label>Font Size</label>
+            <div class="unit-row">
+              <input type="number" id="ve-font-size" placeholder="16" min="4" max="300">
+              <select id="ve-font-unit" class="unit-sel">
+                <option value="px">px</option>
+                <option value="rem">rem</option>
+                <option value="em">em</option>
+                <option value="%">%</option>
+                <option value="vw">vw</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="ve-row">
+          <div class="ve-group">
+            <label>Font Weight</label>
+            <select id="ve-font-weight">
+              <option value="">— inherit —</option>
+              <option value="300">Light 300</option>
+              <option value="400">Regular 400</option>
+              <option value="500">Medium 500</option>
+              <option value="600">SemiBold 600</option>
+              <option value="700">Bold 700</option>
+              <option value="800">ExtraBold 800</option>
+              <option value="900">Black 900</option>
+            </select>
+          </div>
+          <div class="ve-group">
+            <label>Font Style</label>
+            <select id="ve-font-style">
+              <option value="">— inherit —</option>
+              <option value="normal">Normal</option>
+              <option value="italic">Italic</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="ve-row">
+          <div class="ve-group">
+            <label>Text Align</label>
+            <div class="align-row">
+              <button class="al-btn" data-align="left"    title="Left">    <i class="fas fa-align-left"></i></button>
+              <button class="al-btn" data-align="center"  title="Center">  <i class="fas fa-align-center"></i></button>
+              <button class="al-btn" data-align="right"   title="Right">   <i class="fas fa-align-right"></i></button>
+              <button class="al-btn" data-align="justify" title="Justify"> <i class="fas fa-align-justify"></i></button>
+            </div>
+          </div>
+          <div class="ve-group">
+            <label>Text Decoration</label>
+            <select id="ve-text-dec">
+              <option value="">— none —</option>
+              <option value="underline">Underline</option>
+              <option value="line-through">Strikethrough</option>
+              <option value="overline">Overline</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="ve-row">
+          <div class="ve-group">
+            <label>Border Radius</label>
+            <div class="unit-row">
+              <input type="number" id="ve-radius" placeholder="0" min="0">
+              <select id="ve-radius-unit" class="unit-sel">
+                <option value="px">px</option>
+                <option value="%">%</option>
+                <option value="rem">rem</option>
+              </select>
+            </div>
+          </div>
+          <div class="ve-group">
+            <label>Opacity <span id="ve-opacity-label" class="slider-lbl">100%</span></label>
+            <input type="range" id="ve-opacity" min="0" max="100" value="100" class="slider">
+          </div>
+        </div>
+
+        <div class="ve-group">
+          <label>Box Shadow</label>
+          <input type="text" id="ve-shadow" placeholder="0 4px 16px rgba(0,0,0,0.15)">
+        </div>
+
+        <div class="ve-group">
+          <label>Border</label>
+          <input type="text" id="ve-border" placeholder="1px solid #796BD8">
+        </div>
+
+        <div class="ve-group">
+          <label>Extra Inline CSS</label>
+          <textarea id="ve-extra-css" rows="2" placeholder="letter-spacing: 0.05em;"></textarea>
+        </div>
+
+      </div>
+
+      <!-- LAYOUT -->
+      <div class="ve-tab-pane" id="vt-layout">
+
+        <div class="ve-row">
+          <div class="ve-group">
+            <label>Width</label>
+            <div class="unit-row">
+              <input type="text" id="ve-width" placeholder="auto">
+              <select id="ve-width-unit" class="unit-sel">
+                <option value="px">px</option>
+                <option value="%">%</option>
+                <option value="rem">rem</option>
+                <option value="vw">vw</option>
+              </select>
+            </div>
+          </div>
+          <div class="ve-group">
+            <label>Height</label>
+            <div class="unit-row">
+              <input type="text" id="ve-height" placeholder="auto">
+              <select id="ve-height-unit" class="unit-sel">
+                <option value="px">px</option>
+                <option value="%">%</option>
+                <option value="rem">rem</option>
+                <option value="vh">vh</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="ve-group">
+          <label>Padding (px) — T / R / B / L</label>
+          <div class="spacing-row">
+            <input type="number" id="ve-pt" placeholder="T" min="0">
+            <input type="number" id="ve-pr" placeholder="R" min="0">
+            <input type="number" id="ve-pb" placeholder="B" min="0">
+            <input type="number" id="ve-pl" placeholder="L" min="0">
+          </div>
+        </div>
+
+        <div class="ve-group">
+          <label>Margin (px) — T / R / B / L</label>
+          <div class="spacing-row">
+            <input type="number" id="ve-mt" placeholder="T">
+            <input type="number" id="ve-mr" placeholder="R">
+            <input type="number" id="ve-mb" placeholder="B">
+            <input type="number" id="ve-ml" placeholder="L">
+          </div>
+        </div>
+
+        <div class="ve-row">
+          <div class="ve-group">
+            <label>Display</label>
+            <select id="ve-display">
+              <option value="">— inherit —</option>
+              <option value="block">block</option>
+              <option value="inline">inline</option>
+              <option value="inline-block">inline-block</option>
+              <option value="flex">flex</option>
+              <option value="grid">grid</option>
+              <option value="none">none (hide)</option>
+            </select>
+          </div>
+          <div class="ve-group">
+            <label>Position</label>
+            <select id="ve-position">
+              <option value="">— inherit —</option>
+              <option value="static">static</option>
+              <option value="relative">relative</option>
+              <option value="absolute">absolute</option>
+              <option value="fixed">fixed</option>
+              <option value="sticky">sticky</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CODE -->
+      <div class="ve-tab-pane" id="vt-code">
+
+        <div class="ve-group">
+          <label>Replace Element HTML</label>
+          <textarea id="ve-raw-html" rows="6" class="code-ta" spellcheck="false"></textarea>
+        </div>
+
+        <div class="ve-group">
+          <label>Inject CSS into page</label>
+          <textarea id="ve-raw-css" rows="4" class="code-ta" spellcheck="false" placeholder=".my-class { color: red; }"></textarea>
+        </div>
+
+        <div class="ve-group">
+          <label>Inject JavaScript</label>
+          <textarea id="ve-raw-js" rows="4" class="code-ta" spellcheck="false" placeholder="document.querySelector('.el').style.color = 'red';"></textarea>
+        </div>
+
+      </div>
+
+    </div><!-- /ve-body -->
+
+    <div class="ve-footer">
+      <button id="vePreviewBtn" class="ve-btn outline"><i class="fas fa-eye"></i> Preview</button>
+      <button id="veSaveBtn"    class="ve-btn solid"><i class="fas fa-check"></i> Save Changes</button>
+    </div>
+  </div>
+
+  <!-- Backdrop for ve panel -->
+  <div id="veBackdrop" class="ve-backdrop"></div>
+
+  <script src="js/build.js"></script>
+  <script>
+    var ham = document.getElementById('navHamburger');
+    var drawer = document.getElementById('navDrawer');
+    if (ham && drawer) {
+      ham.addEventListener('click', function() { drawer.classList.toggle('open'); });
+      document.addEventListener('click', function(e) {
+        if (!ham.contains(e.target) && !drawer.contains(e.target)) drawer.classList.remove('open');
+      });
+    }
+  </script>
+</body>
+</html>
