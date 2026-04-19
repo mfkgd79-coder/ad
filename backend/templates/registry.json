@@ -1,0 +1,70 @@
+{
+  "templates": [
+    {
+      "id": "landing-app-1",
+      "category": "landing",
+      "tags": ["landing","app","mobile","ios","android","download","launch","product"],
+      "theme": "dark",
+      "style": "modern",
+      "features": ["hero","features","screenshots","download","testimonials","faq","cta"],
+      "pages": ["index"],
+      "path": "templates/landing/landing-app-1",
+      "name": "App Landing Page"
+    },
+    {
+      "id": "portfolio-developer-1",
+      "category": "portfolio",
+      "tags": ["developer","programmer","coder","software","engineer","tech","web developer","frontend","backend","fullstack","portfolio"],
+      "theme": "dark",
+      "style": "modern",
+      "features": ["hero","about","skills","projects","contact","animations","responsive"],
+      "pages": ["index"],
+      "path": "templates/portfolio/portfolio-developer-1",
+      "name": "Developer Portfolio Dark"
+    },
+    {
+      "id": "restaurant-elegant-1",
+      "category": "restaurant",
+      "tags": ["restaurant","food","dining","cafe","bistro","elegant","menu","reservation","fine-dining"],
+      "theme": "dark",
+      "style": "modern",
+      "features": ["hero","menu","about","gallery","reservation","testimonials","contact","animations"],
+      "pages": ["index"],
+      "path": "templates/restaurant/restaurant-elegant-1",
+      "name": "Elegant Restaurant"
+    },
+    {
+      "id": "saas-dark-1",
+      "category": "saas",
+      "tags": ["saas","software","app","platform","tool","dark","tech","ai","startup","product"],
+      "theme": "dark",
+      "style": "glass",
+      "features": ["hero","features","pricing","stats","testimonials","cta","particles"],
+      "pages": ["index"],
+      "path": "templates/saas/saas-dark-1",
+      "name": "SaaS Dark Glassmorphism"
+    },
+    {
+      "id": "agency-creative-1",
+      "category": "agency",
+      "tags": ["agency","creative","design","marketing","digital","branding","studio","media"],
+      "theme": "dark",
+      "style": "modern",
+      "features": ["hero","portfolio","services","team","clients","contact","animations","parallax"],
+      "pages": ["index"],
+      "path": "templates/agency/agency-creative-1",
+      "name": "Creative Agency"
+    },
+    {
+      "id": "ecommerce-fashion-1",
+      "category": "ecommerce",
+      "tags": ["ecommerce","shop","store","fashion","clothing","apparel","boutique","wear","product"],
+      "theme": "light",
+      "style": "modern",
+      "features": ["hero","products","categories","featured","newsletter","cart-ui","responsive"],
+      "pages": ["index"],
+      "path": "templates/ecommerce/ecommerce-fashion-1",
+      "name": "Fashion Store"
+    }
+  ]
+}
