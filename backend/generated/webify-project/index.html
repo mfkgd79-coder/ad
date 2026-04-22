@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delicious Pizza Co.</title>
+    <link rel="stylesheet" href="styles.css">
+<style>
+:root {
+    --bg: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --surface: #ffffff;
+    --surface-2: #e9ecef;
+    --text: #212529;
+    --text-muted: #6c757d;
+    --primary: #ff5722;
+    --primary-dark: #e64a19;
+    --primary-light: #ffccbc;
+    --secondary: #ffc107;
+    --accent: #2196f3;
+    --border: #dee2e6;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    --radius-sm: 0.2rem;
+    --radius-md: 0.25rem;
+    --radius-lg: 0.5rem;
+    --radius-full: 50%;
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 3rem;
+    --max-width: 1200px;
+    --transition: 0.3s ease;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: var(--bg);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+}
+
+.header.scrolled {
+    height: 60px;
+    box-shadow: var(--shadow-lg);
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: var(--max-width);
+    margin: auto;
+    padding: var(--spacing-md);
+}
+
+.nav__logo h1 {
+    font-size: 1.5rem;
+    color: var(--primary);
+}
+
+.nav__menu {
+    display: flex;
+    list-style: none;
+}
+
+.nav__menu li {
+    margin-left: var(--spacing-lg);
+}
+
+.nav__menu a {
+    color: var(--text);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.nav__menu a:hover {
+    color: var(--primary);
+}
+
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url('https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0');
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    color: var(--bg);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero__content {
+    z-index: 1;
+    text-align: center;
+    animation: fade-up 1s ease forwards;
+}
+
+.hero__image {
+    display: none;
+}
+
+.btn {
+    background: linear-gradient(45deg, var(--primary), var(--primary-light));
+    color: var(--bg);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: transform var(--transition), background var(--transition);
+}
+
+.btn:hover {
+    transform: translateY(-4px);
+}
+
+.btn:active {
+    transform: scale(0.95);
+}
+
+.services {
+    padding: var(--spacing-2xl) 0;
+    text-align: center;
+}
+
+.services__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.services__item {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.services__item:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.about {
+    padding: var(--spacing-2xl) var(--spacing-lg);
+    text-align: center;
+}
+
+.about__image {
+    max-width: 100%;
+    border-radius: var(--radius-md);
+    margin-top: var(--spacing-lg);
+}
+
+.testimonials {
+    background-color: var(--bg-secondary);
+    padding: var(--spacing-2xl) 0;
+}
+
+.testimonials__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.testimonial__item {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+    position: relative;
+}
+
+.testimonial__item h3 {
+    color: var(--primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.testimonial__item p {
+    font-style: italic;
+}
+
+.contact {
+    padding: var(--spacing-2xl) var(--spacing-lg);
+    text-align: center;
+}
+
+.contact__form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contact__form label {
+    margin-top: var(--spacing-md);
+}
+
+.contact__form input,
+.contact__form textarea {
+    width: 100%;
+    max-width: 400px;
+    padding: var(--spacing-sm);
+    margin-top: var(--spacing-xs);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    transition: box-shadow var(--transition);
+}
+
+.contact__form input:focus,
+.contact__form textarea:focus {
+    outline: none;
+    box-shadow: 0 0 5px var(--primary);
+}
+
+.footer {
+    background-color: var(--primary);
+    color: var(--bg);
+    padding: var(--spacing-lg) 0;
+    text-align: center;
+}
+
+.footer__social {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    margin-top: var(--spacing-md);
+}
+
+.footer__social li {
+    margin: 0 var(--spacing-md);
+}
+
+.footer__social a {
+    color: var(--bg);
+    text-decoration: none;
+    transition: color var(--transition);
+}
+
+.footer__social a:hover {
+    color: var(--secondary);
+}
+
+@keyframes fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .nav__menu {
+        display: none;
+    }
+
+    .nav--open .nav__menu {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        right: 0;
+        background-color: var(--bg);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .nav__menu li {
+        margin: var(--spacing-md) 0;
+    }
+
+    .hero {
+        flex-direction: column;
+        min-height: 80vh;
+    }
+
+    .hero__image {
+        display: block;
+        width: 100%;
+        margin-top: var(--spacing-md);
+    }
+}
+
+@media (max-width: 1024px) {
+    .services__list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .testimonials__list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 1280px) {
+    .services__list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+</style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="nav__logo">
+                <h1>Delicious Pizza Co.</h1>
+            </div>
+            <ul class="nav__menu">
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
+                <li><a href="#contact">Contact Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="hero" class="hero">
+        <div class="hero__content">
+            <h2>Welcome to Delicious Pizza Co.</h2>
+            <p>Your favorite place for authentic and delicious pizzas made with the freshest ingredients!</p>
+            <a href="#services" class="btn">Explore Our Menu</a>
+        </div>
+        <img src="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDF8fHBpenphfGVufDB8fHx8MTYxNjY2NjA2Ng&ixlib=rb-1.2.1&q=80&w=1080" alt="Delicious Pizza" class="hero__image">
+    </section>
+
+    <section id="services" class="services">
+        <h2>Our Services</h2>
+        <div class="services__list">
+            <div class="services__item">
+                <h3>Pizza Delivery</h3>
+                <p>Enjoy our delicious pizzas delivered straight to your door. Fast and reliable service, guaranteed!</p>
+            </div>
+            <div class="services__item">
+                <h3>Dine-In Experience</h3>
+                <p>Join us in our cozy restaurant for a delightful dining experience with family and friends.</p>
+            </div>
+            <div class="services__item">
+                <h3>Catering Services</h3>
+                <p>Planning an event? Let us cater with our special pizza packages that will impress your guests!</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <h2>About Us</h2>
+        <p>At Delicious Pizza Co., we believe in using only the finest ingredients to create our pizzas. Founded in 2010, we have been committed to providing our community with the best pizza experience possible. Our chefs are passionate about crafting unique flavors and ensuring every bite is memorable.</p>
+        <p>We are proud to support local farmers and suppliers, sourcing fresh vegetables and meats to create our signature dishes. Our mission is to bring joy and satisfaction to every customer through our delicious pizzas.</p>
+        <img src="https://images.unsplash.com/photo-1506794778162-cd051a8c1f00?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDEwfHxwaXphJTIwY29va3xlbnwwfHx8fDE2MTY2NjYwMjI&ixlib=rb-1.2.1&q=80&w=1080" alt="Pizza Making" class="about__image">
+    </section>
+
+    <section id="testimonials" class="testimonials">
+        <h2>What Our Customers Say</h2>
+        <div class="testimonials__list">
+            <div class="testimonial__item">
+                <h3>Jane Doe</h3>
+                <p>"The best pizza I've ever had! The crust is perfectly crispy, and the toppings are fresh and flavorful. Highly recommend!"</p>
+            </div>
+            <div class="testimonial__item">
+                <h3>John Smith</h3>
+                <p>"Delicious Pizza Co. has become my go-to place for pizza nights. Their delivery is quick, and the pizzas are always hot and tasty!"</p>
+            </div>
+            <div class="testimonial__item">
+                <h3>Emily Johnson</h3>
+                <p>"I love their variety of options! Whether I'm in the mood for classic pepperoni or something unique, they never disappoint!"</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <h2>Contact Us</h2>
+        <p>If you have any questions, feel free to reach out to us! We're here to help you with anything you need.</p>
+        <form class="contact__form">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" rows="4" required></textarea>
+            
+            <button type="submit" class="btn">Send Message</button>
+        </form>
+        <p>You can also reach us at <strong>(123) 456-7890</strong> or visit us at <strong>123 Pizza Lane, Food City</strong>.</p>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2023 Delicious Pizza Co. All rights reserved.</p>
+        <ul class="footer__social">
+            <li><a href="#">Facebook</a></li>
+            <li><a href="#">Twitter</a></li>
+            <li><a href="#">Instagram</a></li>
+        </ul>
+    </footer>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Smooth scroll for anchor links
+    const anchorLinks = document.querySelectorAll('a[href^="#"]');
+    anchorLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+
+    // Mobile nav toggle
+    const navHamburger = document.querySelector('.nav__hamburger');
+    const navMenu = document.querySelector('.nav');
+    if (navHamburger) {
+        navHamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('nav--open');
+        });
+    }
+
+    // Close mobile nav when a link is clicked
+    const navLinks = document.querySelectorAll('.nav__menu a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (navMenu.classList.contains('nav--open')) {
+                navMenu.classList.remove('nav--open');
+            }
+        });
+    });
+
+    // Header scroll effect
+    const header = document.querySelector('header');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 80) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+
+    // Intersection Observer for animate-in
+    const animateElements = document.querySelectorAll('.scroll-animate');
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-in');
+                observer.unobserve(entry.target);
+            }
+        });
+    });
+    animateElements.forEach(element => observer.observe(element));
+
+    // Programmatically add scroll-animate class to specific elements
+    const headings = document.querySelectorAll('h2, h3');
+    const cards = document.querySelectorAll('.services__item');
+    const statItems = document.querySelectorAll('.stat__number, [data-counter]');
+    [...headings, ...cards, ...statItems].forEach(el => el.classList.add('scroll-animate'));
+
+    // Counter animation
+    const counters = document.querySelectorAll('.stat__number, [data-counter]');
+    const countUp = (element, target) => {
+        let start = 0;
+        const duration = 2000;
+        const stepTime = Math.abs(Math.floor(duration / target));
+        const timer = setInterval(() => {
+            start += 1;
+            element.textContent = start;
+            if (start >= target) {
+                clearInterval(timer);
+            }
+        }, stepTime);
+    };
+    const observerCounter = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const target = parseInt(entry.target.getAttribute('data-counter') || entry.target.textContent, 10);
+                countUp(entry.target, target);
+                observerCounter.unobserve(entry.target);
+            }
+        });
+    });
+    counters.forEach(counter => observerCounter.observe(counter));
+
+    // Testimonials slider
+    const testimonials = document.querySelector('.testimonials');
+    const nextBtn = document.querySelector('.testimonials__next');
+    const prevBtn = document.querySelector('.testimonials__prev');
+    let currentIndex = 0;
+    const testimonialItems = testimonials.querySelectorAll('.testimonial');
+    const showTestimonial = (index) => {
+        testimonialItems.forEach((item, i) => {
+            item.style.display = i === index ? 'block' : 'none';
+        });
+    };
+    const autoAdvanceTestimonials = () => {
+        currentIndex = (currentIndex + 1) % testimonialItems.length;
+        showTestimonial(currentIndex);
+    };
+    const interval = setInterval(autoAdvanceTestimonials, 4000);
+    testimonials.addEventListener('mouseover', () => clearInterval(interval));
+    testimonials.addEventListener('mouseout', () => setInterval(autoAdvanceTestimonials, 4000));
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % testimonialItems.length;
+            showTestimonial(currentIndex);
+        });
+    }
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + testimonialItems.length) % testimonialItems.length;
+            showTestimonial(currentIndex);
+        });
+    }
+
+    // Scroll spy
+    const sections = document.querySelectorAll('section');
+    const navLinksSpy = document.querySelectorAll('.nav__menu a');
+    const observerSpy = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            const navLink = document.querySelector(`.nav__menu a[href="#${entry.target.id}"]`);
+            if (entry.isIntersecting) {
+                navLinksSpy.forEach(link => link.classList.remove('active'));
+                if (navLink) navLink.classList.add('active');
+            }
+        });
+    }, { threshold: 0.5 });
+    sections.forEach(section => observerSpy.observe(section));
+
+    // Contact form validation
+    const contactForm = document.querySelector('form');
+    const requiredFields = contactForm.querySelectorAll('[required]');
+    contactForm.addEventListener('submit', (e) => {
+        let valid = true;
+        requiredFields.forEach(field => {
+            const error = field.nextElementSibling;
+            if (!field.value) {
+                valid = false;
+                if (error) error.textContent = 'This field is required.';
+            } else {
+                if (error) error.textContent = '';
+            }
+        });
+        if (!valid) {
+            e.preventDefault();
+        }
+    });
+
+    // Page load animation
+    setTimeout(() => {
+        document.body.classList.add('page-loaded');
+    }, 100);
+});
+</script>
+</body>
+</html>

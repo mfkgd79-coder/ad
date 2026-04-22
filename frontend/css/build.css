@@ -997,3 +997,136 @@
   background: var(--purple);
   color: #fff;
 }
+/* ══════════════════════════════════════
+   FIXED / ADDED STYLES
+══════════════════════════════════════ */
+
+/* Ve-panel open state properly shifts preview */
+.preview-shell {
+  transition: margin-right 0.3s ease;
+}
+
+/* Toast upgrades */
+#ve-toast {
+  transition: opacity 0.35s ease;
+  opacity: 0;
+}
+
+/* Builder stage needs flex-direction column */
+.builder-stage {
+  flex-direction: column;
+}
+
+/* Builder container fills remaining height */
+.builder-container {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── VE PANEL open state ── */
+.ve-panel.open {
+  right: 0 !important;
+}
+
+/* ── Double-click hint tooltip on hover ── */
+.__webify_hover_label {
+  position: fixed;
+  background: rgba(121,107,216,0.92);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  pointer-events: none;
+  z-index: 9000;
+  letter-spacing: 0.03em;
+  font-family: var(--font-mono, monospace);
+  text-transform: lowercase;
+  transform: translateY(-110%);
+  white-space: nowrap;
+}
+
+/* ── Better VE nav ── */
+.ve-nav {
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.ve-nav::-webkit-scrollbar { display: none; }
+
+/* ── VE header dark gradient ── */
+.ve-header {
+  background: linear-gradient(135deg, #1a1530 0%, #2a2048 100%) !important;
+}
+
+/* ── Inline content-editable state ── */
+[contenteditable="true"] {
+  outline: 2px solid #796BD8 !important;
+  outline-offset: 2px !important;
+  background: rgba(121,107,216,0.04) !important;
+}
+
+/* ── Backend status pulse fix ── */
+.backend-status.connected i {
+  animation: dotPulse2 2s ease-in-out infinite;
+}
+
+/* ── Code panel z-index above preview ── */
+.code-panel-overlay {
+  z-index: 600;
+}
+
+/* ── VE tab pane scroll padding ── */
+.ve-body {
+  padding-bottom: 2rem;
+}
+
+/* ── Active VE tab style ── */
+.ve-nav-btn.active {
+  background: var(--white, #fff);
+  color: #796BD8;
+  border-bottom: 2px solid #796BD8;
+}
+
+/* ── Ve-group label uppercase ── */
+.ve-group > label {
+  font-size: 0.71rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #8b85b0;
+  margin-bottom: 0.35rem;
+  display: block;
+}
+
+/* ── Section dividers inside ve-body ── */
+.ve-section-title {
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #796BD8;
+  padding: 0.4rem 0 0.3rem;
+  border-top: 1px solid var(--border, #e8e6f0);
+  margin: 0.8rem 0 0.5rem;
+}
+
+/* ── Download button active state ── */
+#downloadBtn:active {
+  transform: scale(0.95) !important;
+}
+
+/* ── Topbar button icon-only variant ── */
+.tb-btn.icon-only {
+  padding: 0.38rem 0.55rem;
+}
+
+/* ── Smooth progress bar ── */
+.gen-bar-fill {
+  transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* ── Step text spacing ── */
+.gen-step {
+  margin-top: 0.4rem;
+}

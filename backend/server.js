@@ -1,5 +1,3 @@
-// backend/server.js (FINAL - TEMPLATE ENGINE VERSION)
-
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -8,16 +6,10 @@ import path from "path";
 import { fileURLToPath } from "url";
 import archiver from "archiver";
 
-// ENGINE IMPORTS
-import { extractIntent } from "./engine/intentEngine.js";
-import { fallbackExtract } from "./engine/fallbackEngine.js";
-import { matchTemplate } from "./engine/templateMatcher.js";
-import { injectData } from "./engine/injector.js";
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-dotenv.config({ path: path.join(__dirname, ".env") });
+dotenv.config();
 
 const app = express();
 app.use(cors());
@@ -26,54 +18,94 @@ app.use(express.json());
 const PORT = process.env.PORT || 5000;
 
 /* ===============================
-   GENERATE PROJECT (NEW FLOW)
+   CONFIG (ONLY N8N)
+================================ */
+const N8N_WEBHOOK = "http://localhost:5678/webhook/generate-website";
+/* ===============================
+   CLEAN HTML
+================================ */
+function cleanHTML(output) {
+  if (!output) return "<h1>No Output</h1>";
+
+  const start = output.indexOf("<!DOCTYPE html");
+  if (start !== -1) return output.slice(start);
+
+  const htmlStart = output.indexOf("<html");
+  if (htmlStart !== -1) return output.slice(htmlStart);
+
+  return output;
+}
+
+/* ===============================
+   CALL N8N
+================================ */
+async function callN8n(prompt) {
+  try {
+    const res = await fetch(N8N_WEBHOOK, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ prompt })
+    });
+
+    // 🔥 NEW: check HTTP status
+    if (!res.ok) {
+      throw new Error(`n8n HTTP error: ${res.status}`);
+    }
+
+    const text = await res.text();
+
+    // 🔥 FIX: handle empty / whitespace response
+    if (!text || text.trim() === "") {
+      throw new Error("Empty response from n8n");
+    }
+
+    let data;
+
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      throw new Error("Invalid JSON from n8n: " + text.substring(0, 200));
+    }
+
+    // 🔥 FIX: better debug
+    if (!data || !data.html) {
+      throw new Error("Missing HTML in n8n response: " + JSON.stringify(data));
+    }
+
+    return cleanHTML(data.html);
+
+  } catch (err) {
+    console.error("❌ n8n ERROR:", err.message);
+    return null;
+  }
+}
+
+/* ===============================
+   GENERATE PROJECT
 ================================ */
 async function generateProject(prompt) {
+  const html = await callN8n(prompt);
 
-  console.log("🚀 Prompt:", prompt);
-
-  // 1️⃣ Intent extraction
-  let result = await extractIntent(prompt);
-
-  let intent = result.success
-    ? result.intent
-    : fallbackExtract(prompt);
-
-  console.log("🧠 Intent:", intent.type);
-
-  // 2️⃣ Template matching
-  const { template } = matchTemplate(intent);
-
-  console.log("📁 Template:", template.id);
-
-  // 3️⃣ Load template files
-  const templateDir = path.join(__dirname, template.path);
-
-  const htmlPath = path.join(templateDir, "index.html");
-
-  if (!fs.existsSync(htmlPath)) {
-    throw new Error("Template index.html not found");
+  if (!html) {
+    throw new Error("Website generation failed (no HTML returned)");
   }
 
-  let html = fs.readFileSync(htmlPath, "utf-8");
-
-  // 4️⃣ Inject dynamic content
-  const finalHtml = injectData(html, intent);
-
   return {
-    projectName: `${template.id}-project`,
+    projectName: "webify-project",
     framework: "html",
     files: [
       {
         path: "index.html",
-        content: finalHtml
+        content: html
       }
     ]
   };
 }
 
 /* ===============================
-   GENERATE API
+   API
 ================================ */
 app.post("/generate", async (req, res) => {
   try {
@@ -90,14 +122,12 @@ app.post("/generate", async (req, res) => {
 
     const projectDir = path.join(__dirname, "generated", parsed.projectName);
 
-    // Remove old
     if (fs.existsSync(projectDir)) {
       fs.rmSync(projectDir, { recursive: true, force: true });
     }
 
     fs.mkdirSync(projectDir, { recursive: true });
 
-    // Write files
     parsed.files.forEach(file => {
       fs.writeFileSync(
         path.join(projectDir, file.path),
@@ -105,8 +135,6 @@ app.post("/generate", async (req, res) => {
         "utf-8"
       );
     });
-
-    console.log("✅ Files created");
 
     /* ZIP */
     const zipPath = `${projectDir}.zip`;
@@ -122,11 +150,10 @@ app.post("/generate", async (req, res) => {
       archive.finalize();
     });
 
-    console.log("📦 ZIP ready");
-
     res.json({
       success: true,
-      framework: parsed.framework,
+      html: parsed.files[0].content,
+      files: parsed.files,
       projectName: parsed.projectName,
       downloadPath: `/${parsed.projectName}.zip`,
       previewPath: `/${parsed.projectName}/index.html`
@@ -137,34 +164,22 @@ app.post("/generate", async (req, res) => {
 
     res.status(500).json({
       success: false,
-      error: err.message || "Generation failed"
+      error: err.message
     });
   }
 });
 
-/* ===============================
-   HEALTH CHECK
-================================ */
+/* =============================== */
 app.get("/health", (req, res) => {
-  res.json({ status: "online" });
+  res.json({ status: "ok" });
 });
 
-/* ===============================
-   STATIC FILES
-================================ */
 app.use(express.static(path.join(__dirname, "../frontend")));
 app.use(express.static(path.join(__dirname, "generated")));
 
-app.get("/", (req, res) => {
-  res.redirect("/index.html");
-});
-
-/* ===============================
-   START SERVER
-================================ */
 app.listen(PORT, () => {
   console.log("=================================");
-  console.log("🚀 Webify Server Running (TEMPLATE ENGINE)");
+  console.log("🚀 Webify Server (n8n mode)");
   console.log(`🌐 http://localhost:${PORT}`);
   console.log("=================================");
 });

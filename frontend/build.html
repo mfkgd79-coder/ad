@@ -124,17 +124,25 @@
     </div>
 
     <div class="topbar-right">
-      <!-- ❌ REMOVED UNDO / REDO FROM HERE -->
+
+      <button id="undoBtnTop" class="tb-btn ghost icon-only" title="Undo (Ctrl+Z)">
+        <i class="fas fa-undo"></i>
+      </button>
+      <button id="redoBtnTop" class="tb-btn ghost icon-only" title="Redo (Ctrl+Y)">
+        <i class="fas fa-redo"></i>
+      </button>
+
+      <div class="tb-divider"></div>
 
       <button id="codeBtn" class="tb-btn ghost" title="View/Edit Code">
         <i class="fas fa-code"></i> Code
       </button>
 
       <button id="openTabBtn" class="tb-btn ghost" title="Open in new tab">
-        <i class="fas fa-external-link-alt"></i>
+        <i class="fas fa-external-link-alt"></i> Preview
       </button>
 
-      <button id="downloadBtn" class="tb-btn primary" title="Download">
+      <button id="downloadBtn" class="tb-btn primary" title="Download HTML">
         <i class="fas fa-download"></i> Download
       </button>
     </div>
@@ -154,31 +162,13 @@
       </iframe>
     </div>
 
-    <!-- RIGHT SIDE EDIT PANEL -->
-    <div id="editorPanel" class="editor-panel">
-
-      <div class="editor-header">
-        <h3>Edit Element</h3>
-        <button id="cancelBtn" class="close-btn">&times;</button>
-      </div>
-
-      <!-- TEXT EDIT -->
-      <label>Text</label>
-      <textarea id="editorText" placeholder="Edit text..."></textarea>
-
-      <!-- UNDO REDO (ONLY HERE) -->
-      <div class="editor-actions">
-        <button id="undoBtn">Undo</button>
-        <button id="redoBtn">Redo</button>
-      </div>
-
-      <!-- ACTION BUTTONS -->
-      <div class="editor-actions">
-        <button id="applyBtn">Apply</button>
-        <button id="saveBtn" class="primary">Save Changes</button>
-      </div>
-
-    </div>
+    <!-- Undo/Redo hidden buttons kept for JS compatibility -->
+    <button id="cancelBtn"  style="display:none"></button>
+    <button id="undoBtn"    style="display:none"></button>
+    <button id="redoBtn"    style="display:none"></button>
+    <button id="applyBtn"   style="display:none"></button>
+    <button id="saveBtn"    style="display:none"></button>
+    <textarea id="editorText" style="display:none"></textarea>
 
   </div>
 
